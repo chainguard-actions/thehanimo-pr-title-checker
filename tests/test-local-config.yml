@@ -1,0 +1,40 @@
+name: Test local configuration path
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_EVENT_NAME: pull_request
+      GITHUB_REF: refs/pull/1/merge
+      GITHUB_HEAD_REF: feature-branch
+      GITHUB_BASE_REF: main
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Create local config file
+        run: |
+          mkdir -p /tmp/pr-title-config
+          cat > /tmp/pr-title-config/config.json << 'EOF'
+          {
+            "LABEL": {
+              "name": "title needs formatting",
+              "color": "EEEEEE"
+            },
+            "CHECKS": [
+              {
+                "pattern": ".*",
+                "on_failed_checks": "label"
+              }
+            ]
+          }
+          EOF
+      - id: action
+        uses: .
+        with:
+          GITHUB_TOKEN: ${{ github.token }}
+          local_configuration_path: /tmp/pr-title-config/config.json
+          pass_on_octokit_error: true
+      - name: Assert action completed
+        run: |
+          echo "Action completed successfully (pass_on_octokit_error=true)"
+          echo "PASS"
