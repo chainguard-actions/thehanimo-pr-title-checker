@@ -1,0 +1,12 @@
+{
+  "LABEL": {
+    "name": "title needs formatting",
+    "color": "EEEEEE"
+  },
+  "CHECKS": [
+    {
+      "pattern": "^(feat|fix|docs|style|refactor|test|chore)(\\(.+\\))?: .+",
+      "error": "PR title must follow conventional commits format"
+    }
+  ]
+}
