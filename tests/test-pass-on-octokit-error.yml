@@ -1,0 +1,25 @@
+name: Test pass_on_octokit_error behavior
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_EVENT_NAME: pull_request
+      GITHUB_REF: refs/pull/42/merge
+      GITHUB_HEAD_REF: fix/some-bug
+      GITHUB_BASE_REF: main
+      GITHUB_REPOSITORY: test-owner/test-repo
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Run action with pass_on_octokit_error true and no valid token
+        id: action
+        uses: .
+        with:
+          GITHUB_TOKEN: ""
+          pass_on_octokit_error: true
+          configuration_path: ".github/pr-title-checker-config.json"
+      - name: Assert action passed despite octokit error
+        run: |
+          echo "Action passed with pass_on_octokit_error=true and empty token"
+          echo "PASS"
