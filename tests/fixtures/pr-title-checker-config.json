@@ -1,0 +1,12 @@
+{
+  "LABEL": {
+    "name": "title needs formatting",
+    "color": "EEEEEE"
+  },
+  "CHECKS": [
+    {
+      "pattern": ".*",
+      "on_failed_checks": "label_pr"
+    }
+  ]
+}

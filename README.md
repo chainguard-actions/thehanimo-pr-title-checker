@@ -1,17 +1,164 @@
-# thehanimo/pr-title-checker
+# Pull Request Title Checker
 
-Checks if the PR Title follows contribution guidelines.
+<!-- prettier-ignore -->
+This action checks if PR titles conform to the Contribution Guidelines :ballot_box_with_check: <br/><br/>
+Consistent title names help maintainers organise their projects better :books: <br/><br/>
+Shows if the author has _reaaaaally_ read the Contribution Guidelines :P
 
-Hardened by [Chainguard](https://www.chainguard.dev) from the upstream action at [https://github.com/thehanimo/pr-title-checker](https://github.com/thehanimo/pr-title-checker).
+## Usage
 
-## Versions
+Create a config file `.github/pr-title-checker-config.json` like this one below:
 
-| Version | Tag | Upstream commit |
-|---------|-----|-----------------|
-| v1.3.7 | [`v1.3.7`](https://github.com/chainguard-actions/pr-title-checker/tree/v1.3.7) | — |
-| v1.4.0 | [`v1.4.0`](https://github.com/chainguard-actions/pr-title-checker/tree/v1.4.0) | — |
-| v1.4.1 | [`v1.4.1`](https://github.com/chainguard-actions/pr-title-checker/tree/v1.4.1) | — |
-| v1.4.2 | [`v1.4.2`](https://github.com/chainguard-actions/pr-title-checker/tree/v1.4.2) | — |
+```json
+{
+  "LABEL": {
+    "name": "title needs formatting",
+    "color": "EEEEEE"
+  },
+  "CHECKS": {
+    "prefixes": ["fix: ", "feat: "],
+    "regexp": "docs\\(v[0-9]\\): ",
+    "regexpFlags": "i",
+    "ignoreLabels" : ["dont-check-PRs-with-this-label", "meta"]
+  },
+  "MESSAGES": {
+    "success": "All OK",
+    "failure": "Failing CI test",
+    "notice": ""
+  }
+}
+```
+You can pass in one of `prefixes` or `regexp` or even both based on your use case. `regexpFlags` and `ignoreLables` are optional fields.
+
+If `LABEL.name` is set to `""`, adding or removing labels will be skipped. The CI test will continue to pass/fail accordingly.
+
+If none of the checks pass, a label will be added to that pull request. \
+If at least one of them passes, the label will be removed.
+
+This action causes CI tests to fail by default. However, if you do not want CI tests failing just because of this action, simply set `alwaysPassCI` as true in the CHECKS field. **An invalid config file will always cause the action to fail.**
+
+Adding label names to the optional `ignoreLabels` field will forfeit any checks for PRs with those labels.
+
+The config file is always pulled from the action's context, i.e., the branch from which the pull request is made.
+
+See [other ways to specify config file.](#other-ways-to-specify-config-file)
+
+Action returns a single output: `success` that indicates if check has passed or failed.
+
+## Create Workflow
+
+Create a workflow file (eg: `.github/workflows/pr-title-checker.yml`) with the following content:
+
+```yaml
+name: "PR Title Checker"
+on:
+  pull_request_target:
+    types:
+      - opened
+      - edited
+      - synchronize
+      - labeled
+      - unlabeled
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: thehanimo/pr-title-checker@v1.4.3
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          pass_on_octokit_error: false
+          configuration_path: .github/pr-title-checker-config.json #(optional. defaults to .github/pr-title-checker-config.json)
+```
+
+To learn more about workflows, see [Create an example workflow.](https://docs.github.com/en/actions/using-workflows/about-workflows#create-an-example-workflow)
+
+## Other ways to specify config file
+
+### 1. Remote URL to a valid JSON file
+```yaml
+...
+    steps:
+      - uses: thehanimo/pr-title-checker@v1.4.3
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          pass_on_octokit_error: false
+          remote_configuration_path: "https://raw.githubusercontent.com/grpc/grpc/master/.github/pr_title_checker_config.json"
+...
+```
+Note that this has to be a url pointing to a valid, raw json file. See [#28](https://github.com/thehanimo/pr-title-checker/issues/28)
+
+### 2. Config file in a GitHub repo
+```yaml
+...
+    steps:
+      - uses: thehanimo/pr-title-checker@v1.4.3
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          pass_on_octokit_error: false
+          github_configuration_owner: RocketChat #(optional. defaults to the owner of the repo in which the action is run)
+          github_configuration_repo: Rocket.Chat #(optional. defaults to the repo in which the action is run)
+          github_configuration_path: .github/pr-title-checker-config.json #(optional. defaults to .github/pr-title-checker-config.json)
+          github_configuration_ref: <named branch, tag, or SHA> #(optional. defaults to the latest commit on the default branch or, if the repo specified is the same as the one on which the action is running, it defaults to the current context's sha)
+          github_configuration_token: ${{ secrets.YOUR_TOKEN }} #(optional. defaults to GITHUB_TOKEN)
+...
+```
+
+### 3. Config file in the local file system of the action
+```yaml
+...
+    steps:
+      - uses: thehanimo/pr-title-checker@v1.4.3
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          pass_on_octokit_error: false
+          local_configuration_path: .github/actions/enforce-pr-titles/config.json
+...
+```
+This is useful if a repo containing the config file is pulled in a previous step using, for e.g., actions/checkout. See [#36](https://github.com/thehanimo/pr-title-checker/issues/36)
+
+### Using output result
+
+You can use the action output to execute follow up steps e.g. adding a comment.
+
+```yml
+    steps:
+      - uses: thehanimo/pr-title-checker@v1.4.3
+        id: check
+        continue-on-error: true
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          pass_on_octokit_error: false
+      
+      - name: Add comment to fix PR title
+        uses: marocchino/sticky-pull-request-comment@v2
+        if: ${{ steps.check.outputs.success == 'false'}}
+        with:
+          header: 'PR Title Check'
+          recreate: true
+          message: |
+              ### 🚨 PR Title Needs Formatting
+              The title of this PR needs to be formatted correctly and include an Azure Boards Reference. 
+              Please update the title to match the format `type: description AB#xxx`. Examples:
+              * `bugfix: fix typo in README.md AB#123`
+              * `chore: update dependencies AB#456`
+              * `feat: add new feature AB#789`
+              * `chore: fixing build pipeline` - no AB reference
+
+      - name: Add comment that PR title is fixed
+        if: ${{ steps.check.outputs.success == 'true'}}
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: 'PR Title Check'
+          recreate: true
+          message: |
+              ### ✅ PR Title Formatted Correctly
+              The title of this PR has been updated to match the correct format. Thank you!
+```
+
+## NOTE:
+* [`pull_request_target`](https://docs.github.com/en/actions/learn-github-actions/events-that-trigger-workflows#pull_request_target) event trigger should be used (not [`pull_request`](https://docs.github.com/en/actions/learn-github-actions/events-that-trigger-workflows#pull_request)) in order to support checking PRs from forks. This was added in `v1.3.2`. See [#8.](https://github.com/thehanimo/pr-title-checker/issues/8)
+* `pass_on_octokit_error` is an optional input which defaults to false. Setting it to true will prevent the CI from failing when an octokit error occurs. This is useful when the environment this action is run in is not consistent. For e.g, it could be a missing GITHUB_TOKEN. Thanks to [@bennycode](https://github.com/bennycode) for pointing this out.
 
 ## Privacy
 
