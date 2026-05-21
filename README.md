@@ -8,11 +8,11 @@ Hardened by [Chainguard](https://www.chainguard.dev) from the upstream action at
 
 | Version | Tag | Upstream commit |
 |---------|-----|-----------------|
-| v1.3.7 | [`v1.3.7`](https://github.com/chainguard-actions/thehanimo--pr-title-checker/tree/v1.3.7) | — |
-| v1.4.0 | [`v1.4.0`](https://github.com/chainguard-actions/thehanimo--pr-title-checker/tree/v1.4.0) | — |
-| v1.4.1 | [`v1.4.1`](https://github.com/chainguard-actions/thehanimo--pr-title-checker/tree/v1.4.1) | — |
-| v1.4.2 | [`v1.4.2`](https://github.com/chainguard-actions/thehanimo--pr-title-checker/tree/v1.4.2) | — |
-| v1.4.3 | [`v1.4.3`](https://github.com/chainguard-actions/thehanimo--pr-title-checker/tree/v1.4.3) | — |
+| v1.3.7 | [`v1.3.7`](https://github.com/chainguard-actions/thehanimo-pr-title-checker/tree/v1.3.7) | — |
+| v1.4.0 | [`v1.4.0`](https://github.com/chainguard-actions/thehanimo-pr-title-checker/tree/v1.4.0) | — |
+| v1.4.1 | [`v1.4.1`](https://github.com/chainguard-actions/thehanimo-pr-title-checker/tree/v1.4.1) | — |
+| v1.4.2 | [`v1.4.2`](https://github.com/chainguard-actions/thehanimo-pr-title-checker/tree/v1.4.2) | — |
+| v1.4.3 | [`v1.4.3`](https://github.com/chainguard-actions/thehanimo-pr-title-checker/tree/v1.4.3) | — |
 
 ## Privacy
 
