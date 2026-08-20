@@ -3,10 +3,16 @@
     "name": "title needs formatting",
     "color": "EEEEEE"
   },
-  "CHECKS": [
-    {
-      "pattern": "^(feat|fix|docs|style|refactor|test|chore)(\\(.+\\))?: .+",
-      "error": "PR title must follow conventional commits format"
-    }
-  ]
+  "CHECKS": {
+    "prefixes": ["feat:", "fix:", "docs:", "chore:", "refactor:", "test:"],
+    "regexp": "^(feat|fix|docs|chore|refactor|test)(\\(.+\\))?: .+",
+    "regexpFlags": "i",
+    "ignoreLabels": ["skip-title-check"],
+    "alwaysPassCI": false
+  },
+  "MESSAGES": {
+    "success": "PR title follows contribution guidelines",
+    "failure": "PR title does not follow contribution guidelines",
+    "notice": ""
+  }
 }

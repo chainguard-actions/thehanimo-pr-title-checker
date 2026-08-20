@@ -1,23 +1,20 @@
-name: Test local configuration path
+name: Test local configuration file
 on:
   workflow_dispatch:
 jobs:
   test:
     runs-on: ubuntu-latest
-    env:
-      GITHUB_EVENT_NAME: pull_request
-      GITHUB_REF: refs/pull/1/merge
-      GITHUB_HEAD_REF: feature-branch
-      GITHUB_BASE_REF: main
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-      - id: action
+
+      - name: Run PR title checker with local config file
+        id: action
         uses: .
         with:
-          local_configuration_path: actions/hardened/thehanimo--pr-title-checker/v1.4.0/tests/fixtures/pr-title-checker-config.json
-          pass_on_octokit_error: true
-        continue-on-error: true
-      - name: Assert action ran without unexpected failure
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          local_configuration_path: tests/fixtures/pr-title-checker-config.json
+
+      - name: Assert action completed successfully with local config
         run: |
-          echo "Action completed with local_configuration_path (pass_on_octokit_error=true allows graceful failure in test environment)"
+          echo "Action completed without error using local config (no PR context under workflow_dispatch)"
           echo "PASS"
