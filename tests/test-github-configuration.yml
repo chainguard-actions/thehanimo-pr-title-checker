@@ -1,4 +1,4 @@
-name: Test remote_configuration_url input
+name: Test github_configuration_* inputs
 on:
   workflow_dispatch:
 jobs:
@@ -12,7 +12,11 @@ jobs:
         continue-on-error: true
         with:
           pass_on_octokit_error: true
-          remote_configuration_url: https://raw.githubusercontent.com/thehanimo/pr-title-checker/main/.github/pr-title-checker-config.json
+          github_configuration_owner: octocat
+          github_configuration_repo: Hello-World
+          github_configuration_path: .github/pr-title-checker-config.json
+          github_configuration_ref: main
+          github_configuration_token: ${{ github.token }}
 
       - name: Assert action ran (pass or graceful failure on sentinel repo)
         env:
@@ -20,7 +24,7 @@ jobs:
         run: |
           echo "outcome: $OUTCOME"
           if [ "$OUTCOME" = "success" ]; then
-            echo "PASS: action succeeded with remote_configuration_url input"
+            echo "PASS: action succeeded with github_configuration_* inputs"
           elif [ "$OUTCOME" = "failure" ]; then
             echo "PASS: action failed gracefully (expected under sentinel repo / missing PR context)"
           else

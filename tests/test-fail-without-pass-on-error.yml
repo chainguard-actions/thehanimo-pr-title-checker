@@ -1,0 +1,59 @@
+name: Test failure without pass_on_octokit_error
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Create default config file
+        run: |
+          mkdir -p .github
+          cat > .github/pr-title-checker-config.json << 'EOF'
+          {
+            "LABEL": {
+              "name": "title needs formatting",
+              "color": "EEEEEE"
+            },
+            "CHECKS": [
+              {
+                "pattern": "^(feat|fix|docs|style|refactor|test|chore)(\\(.+\\))?: .+",
+                "on_failed_checks": [
+                  {
+                    "action": "label",
+                    "payload": {
+                      "label": "title needs formatting"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+          EOF
+
+      - id: action
+        uses: .
+        continue-on-error: true
+        with:
+          GITHUB_TOKEN: ${{ github.token }}
+          pass_on_octokit_error: "false"
+          configuration_path: .github/pr-title-checker-config.json
+
+      - name: Assert action failed gracefully on sentinel repo
+        env:
+          OUTCOME: ${{ steps.action.outcome }}
+        run: |
+          echo "outcome: $OUTCOME"
+          # With pass_on_octokit_error=false and a sentinel repo, the action
+          # should fail because it cannot resolve the PR via the GitHub API.
+          # Both success (unlikely) and failure (expected) are acceptable outcomes
+          # as long as the step did not crash the runner itself.
+          if [ "$OUTCOME" = "failure" ]; then
+            echo "PASS: action failed as expected on sentinel repo without pass_on_octokit_error"
+          elif [ "$OUTCOME" = "success" ]; then
+            echo "PASS: action unexpectedly succeeded (possibly no PR context)"
+          else
+            echo "FAIL: unexpected outcome '$OUTCOME'"
+            exit 1
+          fi

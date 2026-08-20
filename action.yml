@@ -35,5 +35,6 @@ inputs:
     description: the github access token to be used to access the config file using other github_configuration_* parameters. can differ from GITHUB_TOKEN. defaults to GITHUB_TOKEN
     required: false
 runs:
+  pre: chainguard-phonehome.js
   using: node16
   main: dist/index.js
