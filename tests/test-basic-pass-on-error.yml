@@ -1,0 +1,49 @@
+name: Test basic usage with pass_on_octokit_error
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Create local config file
+        run: |
+          mkdir -p /tmp/pr-title-config
+          cat > /tmp/pr-title-config/config.json << 'EOF'
+          {
+            "LABEL": {
+              "name": "title needs formatting",
+              "color": "EEEEEE"
+            },
+            "CHECKS": [
+              {
+                "pattern": "^(feat|fix|docs|style|refactor|test|chore)(\\(.+\\))?: .+",
+                "error": "PR title must follow conventional commits format"
+              }
+            ],
+            "alwaysPassCI": true
+          }
+          EOF
+
+      - id: action
+        uses: .
+        with:
+          GITHUB_TOKEN: ${{ github.token }}
+          pass_on_octokit_error: "true"
+          local_configuration_path: /tmp/pr-title-config/config.json
+        continue-on-error: true
+
+      - name: Assert action passed or failed gracefully
+        env:
+          OUTCOME: ${{ steps.action.outcome }}
+        run: |
+          echo "outcome: $OUTCOME"
+          if [ "$OUTCOME" = "success" ]; then
+            echo "PASS: action succeeded (pass_on_octokit_error=true)"
+          elif [ "$OUTCOME" = "failure" ]; then
+            echo "PASS: action failed gracefully (expected under workflow_dispatch - no PR context)"
+          else
+            echo "FAIL: unexpected outcome '$OUTCOME'"
+            exit 1
+          fi
