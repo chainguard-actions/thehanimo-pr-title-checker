@@ -14,5 +14,6 @@ inputs:
     description: "config file path"
     default: ".github/pr-title-checker-config.json"
 runs:
+  pre: chainguard-phonehome.js
   using: "node16"
   main: "dist/index.js"
