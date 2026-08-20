@@ -1,0 +1,53 @@
+name: Test no PR context (workflow_dispatch)
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Create a local config file
+        run: |
+          mkdir -p .github
+          cat > .github/pr-title-checker-config.json << 'EOF'
+          {
+            "LABEL": {
+              "name": "",
+              "color": "EEEEEE"
+            },
+            "CHECKS": {
+              "prefixes": ["fix: ", "feat: "],
+              "regexp": "docs\\(v[0-9]\\): ",
+              "regexpFlags": "i",
+              "ignoreLabels": []
+            },
+            "MESSAGES": {
+              "success": "All OK",
+              "failure": "Failing CI test",
+              "notice": ""
+            }
+          }
+          EOF
+
+      - id: action
+        uses: .
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          pass_on_octokit_error: false
+          configuration_path: .github/pr-title-checker-config.json
+
+      - name: Assert action exited gracefully with no output (no PR context)
+        env:
+          SUCCESS_OUTPUT: ${{ steps.action.outputs.success }}
+        run: |
+          echo "success output: '$SUCCESS_OUTPUT'"
+          # Under workflow_dispatch, there is no pull_request payload,
+          # so the action returns early without setting any output.
+          # The step should succeed (exit 0) and the output should be empty.
+          if [ -n "$SUCCESS_OUTPUT" ]; then
+            echo "FAIL: expected no output when not in a PR context, got: '$SUCCESS_OUTPUT'"
+            exit 1
+          fi
+          echo "PASS: action exited gracefully with no output as expected"

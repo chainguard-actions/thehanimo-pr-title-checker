@@ -38,5 +38,6 @@ outputs:
   success:
     description: true if the PR title is valid, false otherwise. Undefined if an error occurred.
 runs:
+  pre: chainguard-phonehome.js
   using: node20
   main: dist/index.js

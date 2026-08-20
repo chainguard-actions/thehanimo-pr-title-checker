@@ -1,0 +1,50 @@
+name: Test pass_on_octokit_error flag
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Create a local config file
+        run: |
+          mkdir -p .github
+          cat > .github/pr-title-checker-config.json << 'EOF'
+          {
+            "LABEL": {
+              "name": "",
+              "color": "EEEEEE"
+            },
+            "CHECKS": {
+              "prefixes": ["fix: ", "feat: "],
+              "ignoreLabels": []
+            },
+            "MESSAGES": {
+              "success": "All OK",
+              "failure": "Failing CI test",
+              "notice": ""
+            }
+          }
+          EOF
+
+      - id: action
+        uses: .
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          pass_on_octokit_error: true
+          configuration_path: .github/pr-title-checker-config.json
+
+      - name: Assert action passed (pass_on_octokit_error=true, no PR context)
+        env:
+          OUTCOME: ${{ steps.action.outcome }}
+        run: |
+          echo "outcome: $OUTCOME"
+          # With pass_on_octokit_error=true, the action should never fail CI.
+          # Under workflow_dispatch there's no PR context so it exits early gracefully.
+          if [ "$OUTCOME" != "success" ]; then
+            echo "FAIL: expected action to succeed, got: '$OUTCOME'"
+            exit 1
+          fi
+          echo "PASS: action passed as expected with pass_on_octokit_error=true"

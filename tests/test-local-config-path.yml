@@ -1,0 +1,60 @@
+name: Test local_configuration_path input
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Create a local config file at a custom path
+        run: |
+          mkdir -p tests/fixtures
+          cat > tests/fixtures/pr-title-config.json << 'EOF'
+          {
+            "LABEL": {
+              "name": "",
+              "color": "EEEEEE"
+            },
+            "CHECKS": {
+              "prefixes": ["fix: ", "feat: ", "chore: ", "docs: "],
+              "regexp": "^(fix|feat|chore|docs)(\\(.+\\))?: .+",
+              "regexpFlags": "i",
+              "ignoreLabels": ["skip-title-check"],
+              "alwaysPassCI": true
+            },
+            "MESSAGES": {
+              "success": "PR title looks good!",
+              "failure": "PR title does not match the required format",
+              "notice": ""
+            }
+          }
+          EOF
+
+      - id: action
+        uses: .
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          pass_on_octokit_error: true
+          local_configuration_path: tests/fixtures/pr-title-config.json
+
+      - name: Assert action accepted local config path and exited gracefully
+        env:
+          OUTCOME: ${{ steps.action.outcome }}
+          SUCCESS_OUTPUT: ${{ steps.action.outputs.success }}
+        run: |
+          echo "outcome: $OUTCOME"
+          echo "success output: '$SUCCESS_OUTPUT'"
+          # The action should succeed: it reads the local config path,
+          # then exits early because there's no PR context (workflow_dispatch).
+          if [ "$OUTCOME" != "success" ]; then
+            echo "FAIL: expected action to succeed, got: '$OUTCOME'"
+            exit 1
+          fi
+          # No PR context means no output is set
+          if [ -n "$SUCCESS_OUTPUT" ]; then
+            echo "FAIL: expected no output when not in a PR context, got: '$SUCCESS_OUTPUT'"
+            exit 1
+          fi
+          echo "PASS: action accepted local config path and exited gracefully"
