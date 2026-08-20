@@ -12,7 +12,7 @@ Hardened by [Chainguard](https://www.chainguard.dev) from the upstream action at
 | v1.4.0 | [`v1.4.0`](https://github.com/chainguard-actions/thehanimo-pr-title-checker/tree/v1.4.0) | — |
 | v1.4.1 | [`v1.4.1`](https://github.com/chainguard-actions/thehanimo-pr-title-checker/tree/v1.4.1) | — |
 | v1.4.2 | [`v1.4.2`](https://github.com/chainguard-actions/thehanimo-pr-title-checker/tree/v1.4.2) | [`1d8cd48`](https://github.com/thehanimo/pr-title-checker/commit/1d8cd483a2b73118406a187f54dca8a9415f1375) |
-| v1.4.3 | [`v1.4.3`](https://github.com/chainguard-actions/thehanimo-pr-title-checker/tree/v1.4.3) | — |
+| v1.4.3 | [`v1.4.3`](https://github.com/chainguard-actions/thehanimo-pr-title-checker/tree/v1.4.3) | [`7fbfe05`](https://github.com/thehanimo/pr-title-checker/commit/7fbfe05602bdd86f926d3fb3bccb6f3aed43bc70) |
 
 ## Privacy
 
