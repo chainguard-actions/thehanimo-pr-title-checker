@@ -1,7 +1,0 @@
-{
-  "owner": "thehanimo",
-  "name": "pr-title-checker",
-  "visibility": "internal",
-  "description": "Checks if the PR Title follows contribution guidelines.",
-  "block_publish": false
-}
