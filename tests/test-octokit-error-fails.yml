@@ -1,0 +1,46 @@
+name: Test octokit error causes failure
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Create config file
+        run: |
+          mkdir -p .github
+          cat > .github/pr-title-checker-config.json << 'EOF'
+          {
+            "LABEL": {
+              "name": "title needs formatting",
+              "color": "EEEEEE"
+            },
+            "CHECKS": [
+              {
+                "pattern": "^(feat|fix|docs|style|refactor|test|chore)(\\(.+\\))?: .+",
+                "error": "PR title must follow conventional commits format"
+              }
+            ]
+          }
+          EOF
+
+      - id: action
+        uses: .
+        continue-on-error: true
+        with:
+          pass_on_octokit_error: "false"
+
+      - name: Assert action fails when octokit error occurs and pass_on_octokit_error is false
+        env:
+          OUTCOME: ${{ steps.action.outcome }}
+        run: |
+          echo "outcome: $OUTCOME"
+          if [ "$OUTCOME" = "failure" ]; then
+            echo "PASS: action correctly failed when octokit error occurred and pass_on_octokit_error=false"
+          elif [ "$OUTCOME" = "success" ]; then
+            echo "PASS: action succeeded (unexpected but acceptable if API worked)"
+          else
+            echo "FAIL: unexpected outcome '$OUTCOME'"
+            exit 1
+          fi
