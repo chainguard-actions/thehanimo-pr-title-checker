@@ -6,14 +6,14 @@ Hardened by [Chainguard](https://www.chainguard.dev) from the upstream action at
 
 ## Versions
 
-| Version | Tag | Upstream commit |
-|---------|-----|-----------------|
-| v1.3.7 | [`v1.3.7`](https://github.com/chainguard-actions/thehanimo-pr-title-checker/tree/v1.3.7) | [`cdafc66`](https://github.com/thehanimo/pr-title-checker/commit/cdafc664bf9b25678d4e6df76ff67b2fe21bb5d2) |
-| v1.4.0 | [`v1.4.0`](https://github.com/chainguard-actions/thehanimo-pr-title-checker/tree/v1.4.0) | [`0cf5902`](https://github.com/thehanimo/pr-title-checker/commit/0cf5902181e78341bb97bb06646396e5bd354b3f) |
-| v1.4.1 | [`v1.4.1`](https://github.com/chainguard-actions/thehanimo-pr-title-checker/tree/v1.4.1) | [`5652588`](https://github.com/thehanimo/pr-title-checker/commit/5652588c80c479af803eabfbdb5a3895a77c1388) |
-| v1.4.2 | [`v1.4.2`](https://github.com/chainguard-actions/thehanimo-pr-title-checker/tree/v1.4.2) | [`1d8cd48`](https://github.com/thehanimo/pr-title-checker/commit/1d8cd483a2b73118406a187f54dca8a9415f1375) |
-| v1.4.3 | [`v1.4.3`](https://github.com/chainguard-actions/thehanimo-pr-title-checker/tree/v1.4.3) | [`7fbfe05`](https://github.com/thehanimo/pr-title-checker/commit/7fbfe05602bdd86f926d3fb3bccb6f3aed43bc70) |
-| v2.0.0 | [`v2.0.0`](https://github.com/chainguard-actions/thehanimo-pr-title-checker/tree/v2.0.0) | [`b69bc3a`](https://github.com/thehanimo/pr-title-checker/commit/b69bc3a841cf4e3cfef2d822625d8c90a588e9da) |
+| Version | Tag | Upstream commit | Hardening report |
+|---------|-----|-----------------|------------------|
+| v1.3.7 | [`v1.3.7`](https://github.com/chainguard-actions/thehanimo-pr-title-checker/tree/v1.3.7) | [`cdafc66`](https://github.com/thehanimo/pr-title-checker/commit/cdafc664bf9b25678d4e6df76ff67b2fe21bb5d2) | [`HARDENING.md`](https://github.com/chainguard-actions/thehanimo-pr-title-checker/blob/v1.3.7/HARDENING.md) |
+| v1.4.0 | [`v1.4.0`](https://github.com/chainguard-actions/thehanimo-pr-title-checker/tree/v1.4.0) | [`0cf5902`](https://github.com/thehanimo/pr-title-checker/commit/0cf5902181e78341bb97bb06646396e5bd354b3f) | [`HARDENING.md`](https://github.com/chainguard-actions/thehanimo-pr-title-checker/blob/v1.4.0/HARDENING.md) |
+| v1.4.1 | [`v1.4.1`](https://github.com/chainguard-actions/thehanimo-pr-title-checker/tree/v1.4.1) | [`5652588`](https://github.com/thehanimo/pr-title-checker/commit/5652588c80c479af803eabfbdb5a3895a77c1388) | [`HARDENING.md`](https://github.com/chainguard-actions/thehanimo-pr-title-checker/blob/v1.4.1/HARDENING.md) |
+| v1.4.2 | [`v1.4.2`](https://github.com/chainguard-actions/thehanimo-pr-title-checker/tree/v1.4.2) | [`1d8cd48`](https://github.com/thehanimo/pr-title-checker/commit/1d8cd483a2b73118406a187f54dca8a9415f1375) | [`HARDENING.md`](https://github.com/chainguard-actions/thehanimo-pr-title-checker/blob/v1.4.2/HARDENING.md) |
+| v1.4.3 | [`v1.4.3`](https://github.com/chainguard-actions/thehanimo-pr-title-checker/tree/v1.4.3) | [`7fbfe05`](https://github.com/thehanimo/pr-title-checker/commit/7fbfe05602bdd86f926d3fb3bccb6f3aed43bc70) | [`HARDENING.md`](https://github.com/chainguard-actions/thehanimo-pr-title-checker/blob/v1.4.3/HARDENING.md) |
+| v2.0.0 | [`v2.0.0`](https://github.com/chainguard-actions/thehanimo-pr-title-checker/tree/v2.0.0) | [`b69bc3a`](https://github.com/thehanimo/pr-title-checker/commit/b69bc3a841cf4e3cfef2d822625d8c90a588e9da) | [`HARDENING.md`](https://github.com/chainguard-actions/thehanimo-pr-title-checker/blob/v2.0.0/HARDENING.md) |
 
 ## Privacy
 
