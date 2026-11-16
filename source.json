@@ -4,8 +4,13 @@
   "version": "v2.0.0",
   "commit_sha": "b69bc3a841cf4e3cfef2d822625d8c90a588e9da",
   "url": "https://github.com/thehanimo/pr-title-checker",
-  "policy_sha": "d636be7e43ef829af6e853da6b3c7566db9f72fe",
+  "policy_sha": "374911c4be584df24e6da57af2d990570ef0f859",
   "test_policy_sha": "843adf9e4b8f85d0c08b27b9d0b09dd094b54702",
   "test_agent_version": "2",
-  "harden_agent_version": "2"
+  "harden_agent_version": "2",
+  "dist_artifact": {
+    "gcs_uri": "gs://patch-actions-node-artifacts/dist-artifacts/thehanimo/pr-title-checker/v2.0.0/sha256-5d760287250705bb6aafd19f4a70fab4faf48f4908d34af2e4df903fe2d07cb8.tar.gz",
+    "sha256": "5d760287250705bb6aafd19f4a70fab4faf48f4908d34af2e4df903fe2d07cb8",
+    "size_bytes": 305433
+  }
 }
